@@ -9,30 +9,25 @@ type Server = {
 const server = {} as Server;
 
 server.httpServer = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-    console.log(req.url);
+    const socket = req.socket as any;
+    const encryption = socket.encryption as any;
+    const ssl = encryption !== undefined ? 's' : '';
+
+    const baseURL = `http${ssl}://${req.headers.host}`;
+    const parsedURL = new URL(req.url ?? '', baseURL);
+    const httpMethod = req.method ? req.method.toLowerCase() : 'get';
+    const trimmedPath = parsedURL.pathname
+        .replace(/^\/+|\/+$/g, '')
+        .replace(/\/\/+/g, '/');
 
     const isTextFile = false;       // galune: .css, .js, .svg, ...
     const isBinaryFile = false;     // galune: .png, .jpg, .webp, .eot, .ttf, ...
     const isAPI = false;            // url prasideda: /api/.....
     const isPage = !isTextFile && !isBinaryFile && !isAPI;
 
-    // puslapio html
-    // failai:
-    // - tekstiniai:
-    //      - css failu
-    //      - js failu
-    //      - svg failu
-    // - ne tekstiniai:
-    //      - img failu
-    //      - fonts failu
-    //      - video failu
-    //      - audio failu
-    //      - pdf failu
-    // duomenu JSON
-
     let responseContent = 'ERROR: neturiu tai ko tu nori...';
 
-    if (req.url === '/') {
+    if (trimmedPath === '') {
         responseContent = `<!DOCTYPE html>
 <html lang="en">
 
@@ -92,6 +87,9 @@ server.httpServer = http.createServer((req: IncomingMessage, res: ServerResponse
 
 </html>`;
     }
+
+    console.log(trimmedPath);
+
 
     return res.end(responseContent);
 });
