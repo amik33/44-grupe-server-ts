@@ -26,7 +26,8 @@ Request object:
 {
     "name": "Jonas",
     "email": "jonas@jonas.lt",
-    "password": "superseacretpassword"
+    "password": "superseacretpassword",
+    "age": 99
 }
 ```
 
@@ -51,6 +52,8 @@ Response object, if any error:
 > **GET: /api/user/[ID]**
 
 Response object:
+
+-   excluding password;
 
 ```json
 {
