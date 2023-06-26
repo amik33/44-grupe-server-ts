@@ -30,6 +30,9 @@ server.httpServer = http.createServer(async (req: IncomingMessage, res: ServerRe
     const isAPI = trimmedPath.startsWith('api/');
     const isPage = !isTextFile && !isBinaryFile && !isAPI;
 
+    console.log(httpMethod, trimmedPath);
+
+
     let responseContent = 'ERROR: neturiu tai ko tu nori...';
 
     if (isTextFile) {
